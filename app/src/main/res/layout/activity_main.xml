@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/activity_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.richstern.bucket.activities.MainActivity"
+    android:background="#222">
+
+    <FrameLayout
+        android:id="@+id/photo_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33ffffff"
+        android:layout_margin="16dp">
+
+        <!-- empty photo -->
+        <FrameLayout
+            android:id="@+id/empty_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:background="@android:color/black">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Click to select photo"
+                android:textColor="@android:color/white"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</RelativeLayout>
