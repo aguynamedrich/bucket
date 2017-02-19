@@ -84,6 +84,6 @@ public class Images {
         int diffBlue = Math.abs(Colors.blue(originalColor) - Colors.blue(colorAtPixel));
         float avgDiff = (diffRed + diffGreen + diffBlue) / 3.0f;
         float percentDiff = avgDiff / 255 * 100;
-        return  percentDiff < threshold;
+        return  percentDiff <= threshold;
     }
 }
