@@ -29,6 +29,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends RxAppCompatActivity {
 
@@ -74,6 +75,7 @@ public class MainActivity extends RxAppCompatActivity {
             .map(event -> new PointF(event.getX(), event.getY()))
             .distinctUntilChanged()
             .compose(bindToLifecycle())
+            .observeOn(Schedulers.computation())
             .subscribe(OnlyNextObserver.forAction(this::floodFill));
 
         Observable.combineLatest(
@@ -94,14 +96,12 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void floodFill(PointF point) {
-        image.setClickable(false);
         int originX = (int) (point.x / image.getWidth() * pixelData.length);
         int originY = (int) (point.y / image.getHeight() * pixelData[0].length);
         Images.floodFill(pixelData, originX, originY, selectedColor, threshold.getProgress());
         int[] pixels = Images.flatten(pixelData);
         Bitmap bitmap = Bitmap.createBitmap(pixels, pixelData.length, pixelData[0].length, Bitmap.Config.ARGB_8888);
-        image.setImageBitmap(bitmap);
-        image.setClickable(true);
+        runOnUiThread(() -> image.setImageBitmap(bitmap));
     }
 
     @Override
