@@ -2,6 +2,8 @@ package com.richstern.bucket.image;
 
 import android.graphics.Point;
 
+import com.richstern.bucket.util.Colors;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class Images {
                 for (int i = minX; i <= maxX; i++) {
                     for (int j = minY; j <= maxY; j++) {
                         int colorAtPixel = imageData[i][j];
-                        if (withinThreshold(originalColor, colorAtPixel, threshold)) {
+                        if (isWithinThreshold(originalColor, colorAtPixel, threshold)) {
                             // Fill current pixel
                             imageData[i][j] = fillColor;
 
@@ -76,26 +78,12 @@ public class Images {
         }
     }
 
-    private static boolean withinThreshold(int originalColor, int colorAtPixel, int threshold) {
-        int originalRed = originalColor & 0x00FF0000 >> 16;
-        int originalGreen = originalColor & 0x0000FF00 >> 8;
-        int originalBlue = originalColor & 0x000000FF;
-        int colorAtPixelRed = colorAtPixel & 0x00FF0000 >> 16;
-        int colorAtPixelGreen = colorAtPixel & 0x0000FF00 >> 8;
-        int colorAtPixelBlue = colorAtPixel & 0x000000FF;
-        int diffRed = Math.abs(originalRed - colorAtPixelRed);
-        int diffGreen = Math.abs(originalGreen - colorAtPixelGreen);
-        int diffBlue = Math.abs(originalBlue - colorAtPixelBlue);
+    private static boolean isWithinThreshold(int originalColor, int colorAtPixel, int threshold) {
+        int diffRed = Math.abs(Colors.red(originalColor) - Colors.red(colorAtPixel));
+        int diffGreen = Math.abs(Colors.green(originalColor) - Colors.green(colorAtPixel));
+        int diffBlue = Math.abs(Colors.blue(originalColor) - Colors.blue(colorAtPixel));
         float avgDiff = (diffRed + diffGreen + diffBlue) / 3.0f;
         float percentDiff = avgDiff / 255 * 100;
         return  percentDiff < threshold;
-    }
-
-    public static int[][] deepCopy(int[][] src) {
-        int[][] copy = new int[src.length][];
-        for (int i = 0; i < src.length; i++) {
-            System.arraycopy(src[i], 0, copy[i], 0, src[i].length);
-        }
-        return copy;
     }
 }

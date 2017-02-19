@@ -16,6 +16,7 @@ import com.richstern.bucket.R;
 import com.richstern.bucket.image.Images;
 import com.richstern.bucket.picasso.AbstractTarget;
 import com.richstern.bucket.rx.OnlyNextObserver;
+import com.richstern.bucket.util.Colors;
 import com.richstern.bucket.util.Intents;
 import com.richstern.bucket.util.ViewResizeHelper;
 import com.richstern.bucket.util.ViewResizeHelper.AspectRatio;
@@ -28,7 +29,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.functions.Action1;
 
 public class MainActivity extends RxAppCompatActivity {
 
@@ -80,7 +80,7 @@ public class MainActivity extends RxAppCompatActivity {
             RxSeekBar.changes(red),
             RxSeekBar.changes(green),
             RxSeekBar.changes(blue),
-            this::toRGB)
+            Colors::toRGB)
             .doOnNext(selectedColor -> this.selectedColor = selectedColor)
             .compose(bindToLifecycle())
             .subscribe(OnlyNextObserver.forAction(color::setBackgroundColor));
@@ -94,19 +94,14 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void floodFill(PointF point) {
+        image.setClickable(false);
         int originX = (int) (point.x / image.getWidth() * pixelData.length);
         int originY = (int) (point.y / image.getHeight() * pixelData[0].length);
         Images.floodFill(pixelData, originX, originY, selectedColor, threshold.getProgress());
         int[] pixels = Images.flatten(pixelData);
         Bitmap bitmap = Bitmap.createBitmap(pixels, pixelData.length, pixelData[0].length, Bitmap.Config.ARGB_8888);
         image.setImageBitmap(bitmap);
-    }
-
-    private int toRGB(int red, int green, int blue) {
-        return 0xFF000000 |
-            ((red << 16) & 0x00FF0000) |
-            ((green << 8) & 0x0000FF00) |
-            (blue & 0x000000FF);
+        image.setClickable(true);
     }
 
     @Override
@@ -125,6 +120,8 @@ public class MainActivity extends RxAppCompatActivity {
     private void photoSelected(Uri data) {
         Picasso.with(this)
             .load(data)
+            .resize(400, 400) // arbitrary small square
+            .centerCrop()
             .into(new AbstractTarget() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -136,26 +133,11 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void getBitmapData(Bitmap bitmap) {
-        int top, left, width, height;
-
-        // Let's just make this a square for simplicity
-        if (bitmap.getWidth() < bitmap.getHeight()) {
-            left = 0;
-            width = height = bitmap.getWidth();
-            top = (bitmap.getHeight() - width) / 2;
-        } else {
-            top = 0;
-            width = height = bitmap.getHeight();
-            left = (bitmap.getWidth() - height) / 2;
-        }
-
-        Bitmap squareBitmap = Bitmap.createBitmap(bitmap, left, top, width, height);
-
-        // Get pixel data and fill our 2D structure
-        int[] pixels = new int[width * height];
-        squareBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         pixelData = Images.to2dArray(pixels, width, height);
-
-        image.setImageBitmap(squareBitmap);
+        image.setImageBitmap(bitmap);
     }
 }
