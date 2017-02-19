@@ -5,10 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxSeekBar;
@@ -23,10 +23,12 @@ import com.richstern.bucket.util.ViewResizeHelper.ResizeAnchor;
 import com.squareup.picasso.Picasso;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.Subscriber;
+import rx.functions.Action1;
 
 public class MainActivity extends RxAppCompatActivity {
 
@@ -43,7 +45,7 @@ public class MainActivity extends RxAppCompatActivity {
     @BindView(R.id.red_level) View redLevel;
     @BindView(R.id.green_level) View greenLevel;
     @BindView(R.id.blue_level) View blueLevel;
-    @BindView(R.id.threshold_text) View thresholdText;
+    @BindView(R.id.threshold_text) TextView thresholdText;
     @BindView(R.id.threshold) SeekBar threshold;
 
     private int[][] pixelData;
@@ -60,7 +62,6 @@ public class MainActivity extends RxAppCompatActivity {
         ViewResizeHelper.resize(redLevel, AspectRatio.SQUARE, ResizeAnchor.WIDTH);
         ViewResizeHelper.resize(greenLevel, AspectRatio.SQUARE, ResizeAnchor.WIDTH);
         ViewResizeHelper.resize(blueLevel, AspectRatio.SQUARE, ResizeAnchor.WIDTH);
-        ViewResizeHelper.resize(thresholdText, AspectRatio.SQUARE, ResizeAnchor.WIDTH);
 
         RxView.clicks(emptyPhoto)
             .compose(bindToLifecycle())
@@ -73,22 +74,7 @@ public class MainActivity extends RxAppCompatActivity {
             .map(event -> new PointF(event.getX(), event.getY()))
             .distinctUntilChanged()
             .compose(bindToLifecycle())
-            .subscribe(new Subscriber<PointF>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.d("Rich", e.getClass().getSimpleName() + "," + e.getMessage());
-                }
-
-                @Override
-                public void onNext(PointF pointF) {
-                    floodFill(pointF);
-                }
-            });
+            .subscribe(OnlyNextObserver.forAction(this::floodFill));
 
         Observable.combineLatest(
             RxSeekBar.changes(red),
@@ -98,6 +84,13 @@ public class MainActivity extends RxAppCompatActivity {
             .doOnNext(selectedColor -> this.selectedColor = selectedColor)
             .compose(bindToLifecycle())
             .subscribe(OnlyNextObserver.forAction(color::setBackgroundColor));
+
+        RxSeekBar.changes(threshold)
+            .distinctUntilChanged()
+            .compose(bindToLifecycle())
+            .subscribe(OnlyNextObserver.forAction(value ->
+                thresholdText.setText(String.format(Locale.US, "%d %%", value))));
+
     }
 
     private void floodFill(PointF point) {

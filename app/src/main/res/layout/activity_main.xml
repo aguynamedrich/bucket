@@ -91,13 +91,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:orientation="vertical">
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
                 <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
                     android:id="@+id/red"
                     android:layout_width="0dp"
@@ -110,7 +112,6 @@
                 android:id="@+id/red_level"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="#FF0000"/>
         </LinearLayout>
@@ -119,13 +120,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:orientation="vertical">
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
                 <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
                     android:id="@+id/green"
                     android:layout_width="0dp"
@@ -138,7 +141,6 @@
                 android:id="@+id/green_level"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="#00FF00"/>
         </LinearLayout>
@@ -147,13 +149,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp">
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:orientation="vertical">
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
                 <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
                     android:id="@+id/blue"
                     android:layout_width="0dp"
@@ -166,7 +170,6 @@
                 android:id="@+id/blue_level"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="#0000FF"/>
         </LinearLayout>
@@ -179,33 +182,35 @@
             android:layout_weight="1"
             android:layout_margin="8dp" />
 
-        <!-- Blue control -->
+        <!-- Threshold -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp">
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:orientation="vertical">
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
                 <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
                     android:id="@+id/threshold"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:splitTrack="false"
-                    android:max="100"
-                    android:progress="35"
+                    android:max="50"
+                    android:progress="10"
                     app:seekBarRotation="CW270" />
             </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
             <TextView
                 android:id="@+id/threshold_text"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:textColor="@android:color/white"
+                android:gravity="center_horizontal"
                 android:textStyle="bold"
                 android:text="%"/>
         </LinearLayout>

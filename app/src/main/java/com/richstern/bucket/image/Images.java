@@ -59,6 +59,7 @@ public class Images {
                             // Add new origin if not existing origin
                             if (i != originX && j != originY) {
                                 Point newOrigin = new Point(i, j);
+                                // Avoid repeats, since it's possible they pass threshold test
                                 if (!used.contains(newOrigin)) {
                                     used.add(newOrigin);
                                     newOrigins.add(newOrigin);
