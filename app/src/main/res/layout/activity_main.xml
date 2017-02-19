@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.richstern.bucket.activities.MainActivity"
     android:orientation="vertical"
-    android:background="#222"
+    android:background="#FFFC00"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Image container -->
@@ -35,11 +35,42 @@
 
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/image"
+        <FrameLayout
+            android:id="@+id/image_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:visibility="invisible">
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!--
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="8dp"
+                android:layout_gravity="bottom|right">
+                <ImageView
+                    android:id="@+id/refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_refresh"
+                    android:tint="@android:color/white"
+                    android:elevation="8dp"
+                    android:layout_marginBottom="8dp"/>
+                <ImageView
+                    android:id="@+id/select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_image"
+                    android:tint="@android:color/white"
+                    android:elevation="8dp"/>
+            </LinearLayout>
+            -->
+
+        </FrameLayout>
 
     </FrameLayout>
 
@@ -140,13 +171,13 @@
                 android:background="#0000FF"/>
         </LinearLayout>
 
+        <!-- Selected color -->
         <View
             android:id="@+id/color"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp" />
+            android:layout_margin="8dp" />
 
         <!-- Blue control -->
         <LinearLayout
@@ -165,10 +196,11 @@
                     android:layout_height="0dp"
                     android:splitTrack="false"
                     android:max="100"
-                    android:value="30"
+                    android:progress="35"
                     app:seekBarRotation="CW270" />
             </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
             <TextView
+                android:id="@+id/threshold_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
