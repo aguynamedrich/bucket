@@ -45,30 +45,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!--
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="8dp"
-                android:layout_gravity="bottom|right">
-                <ImageView
-                    android:id="@+id/refresh"
+            <FrameLayout
+                android:id="@+id/processing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#66000000"
+                android:clickable="false"
+                android:visibility="gone">
+
+                <ProgressBar
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_refresh"
-                    android:tint="@android:color/white"
-                    android:elevation="8dp"
-                    android:layout_marginBottom="8dp"/>
-                <ImageView
-                    android:id="@+id/select"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_image"
-                    android:tint="@android:color/white"
-                    android:elevation="8dp"/>
-            </LinearLayout>
-            -->
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
 
         </FrameLayout>
 

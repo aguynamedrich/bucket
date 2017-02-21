@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxSeekBar;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import com.richstern.bucket.R;
 import com.richstern.bucket.image.Images;
 import com.richstern.bucket.picasso.AbstractTarget;
@@ -34,6 +35,7 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends RxAppCompatActivity {
 
     private static final int REQUEST_CODE_PICK_PHOTO = 0x00;
+    private static final int INPUT_IMAGE_DIMENSION = 400;
 
     @BindView(R.id.photo_frame) View photoFrame;
     @BindView(R.id.empty_photo) View emptyPhoto;
@@ -48,9 +50,11 @@ public class MainActivity extends RxAppCompatActivity {
     @BindView(R.id.blue_level) View blueLevel;
     @BindView(R.id.threshold_text) TextView thresholdText;
     @BindView(R.id.threshold) SeekBar threshold;
+    @BindView(R.id.processing) View processing;
 
     private int[][] pixelData;
     private int selectedColor;
+    private final BehaviorRelay<Boolean> isProcessingRelay = BehaviorRelay.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,13 @@ public class MainActivity extends RxAppCompatActivity {
             }));
 
         RxView.touches(image)
+            .withLatestFrom(isProcessingRelay.startWith(false), (motionEvent, isProcessing) -> isProcessing ? null : motionEvent)
+            .filter(motionEvent -> motionEvent != null)
             .map(event -> new PointF(event.getX(), event.getY()))
+            .doOnNext(__ -> {
+                processing.setVisibility(View.VISIBLE);
+                isProcessingRelay.call(true);
+            })
             .distinctUntilChanged()
             .compose(bindToLifecycle())
             .observeOn(Schedulers.computation())
@@ -101,7 +111,11 @@ public class MainActivity extends RxAppCompatActivity {
         Images.floodFill(pixelData, originX, originY, selectedColor, threshold.getProgress());
         int[] pixels = Images.flatten(pixelData);
         Bitmap bitmap = Bitmap.createBitmap(pixels, pixelData.length, pixelData[0].length, Bitmap.Config.ARGB_8888);
-        runOnUiThread(() -> image.setImageBitmap(bitmap));
+        runOnUiThread(() -> {
+            image.setImageBitmap(bitmap);
+            processing.setVisibility(View.GONE);
+            isProcessingRelay.call(false);
+        });
     }
 
     @Override
@@ -120,7 +134,7 @@ public class MainActivity extends RxAppCompatActivity {
     private void photoSelected(Uri data) {
         Picasso.with(this)
             .load(data)
-            .resize(400, 400) // arbitrary small square
+            .resize(INPUT_IMAGE_DIMENSION, INPUT_IMAGE_DIMENSION) // arbitrary small-ish square
             .centerCrop()
             .into(new AbstractTarget() {
                 @Override
